@@ -1,0 +1,92 @@
+================================
+Node / React / Vite
+================================
+
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+Environment variables
+
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+Logs
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+================================
+Python / FastAPI
+================================
+Virtual environments
+
+backend/.venv/
+backend/venv/
+backend/env/
+backend/.env/
+
+Python cache
+
+pycache/
+*.py[cod]
+*$py.class
+
+Pytest
+
+.pytest_cache/
+
+Coverage
+
+.coverage
+.coverage.*
+htmlcov/
+
+Type checkers / linters
+
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+================================
+Environment variables
+================================
+
+.env
+.env.local
+.env.*.local
+
+================================
+IDE / Editors
+================================
+
+.vscode/
+.idea/
+
+================================
+Operating system
+================================
+
+.DS_Store
+Thumbs.db
+
+================================
+Logs
+================================
+
+*.log
+
+================================
+Build / temporary files
+================================
+
+*.tmp
+*.temp
+.cache/
+dist/
+build/
+tmp/
+temp/
