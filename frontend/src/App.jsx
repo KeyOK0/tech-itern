@@ -1,15 +1,33 @@
-function App(){
-  return (
-    <div className="min-h-screen bg-slate-900 flex 
-    items-center justify-center">
 
-        <h1 className="text-5xl font-bold text-white">
-          Działa
-        </h1>
+import { useState } from "react";
+import MainMenu from "./components/MainMenu";
 
-    </div>
-  )
+export default function App() {
+  const [screen, setScreen] = useState("home");
+
+  switch (screen) {
+    case "login":
+      return (<h1>Tutaj będzie formularz logowania</h1>);
+
+    case "register":
+      return (<h1>Tutaj będzie formularz logowania</h1>);
+
+    case "game":
+      return (
+        <GameMenu
+          onNewGame={() => setScreen("new-game")}
+          onContinue={() => setScreen("continue")}
+        />
+      );
+
+    case "home":
+    default:
+      return (
+        <MainMenu
+          onLogin={() => setScreen("login")}
+          onRegister={() => setScreen("register")}
+        />
+      );
+  }
 }
-
-export default App
 
