@@ -1,33 +1,13 @@
 
-import { useState } from "react";
 import MainMenu from "./components/MainMenu";
+import { Routes, Route } from "react-router";
 
 export default function App() {
-  const [screen, setScreen] = useState("home");
-
-  switch (screen) {
-    case "login":
-      return (<h1>Tutaj będzie formularz logowania</h1>);
-
-    case "register":
-      return (<h1>Tutaj będzie formularz logowania</h1>);
-
-    case "game":
-      return (
-        <GameMenu
-          onNewGame={() => setScreen("new-game")}
-          onContinue={() => setScreen("continue")}
-        />
-      );
-
-    case "home":
-    default:
-      return (
-        <MainMenu
-          onLogin={() => setScreen("login")}
-          onRegister={() => setScreen("register")}
-        />
-      );
-  }
+  return (
+    <Routes>
+      <Route path="/" element={<MainMenu />} />
+      <Route path="*" element={<div>Nie znaleziono strony</div>} />
+    </Routes>
+  );
 }
 
