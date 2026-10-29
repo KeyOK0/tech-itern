@@ -20,11 +20,15 @@ export function createBattleScene({ app, world, lineup }) {
   const background = createBackground(lineup.bg);
   const unitLayer = new Container();
   unitLayer.sortableChildren = true;
-  root.addChild(background.view, unitLayer);
+  const overlayLayer = new Container();
+  root.addChild(background.view, unitLayer, overlayLayer);
   world.addChild(root);
 
   const units = [...placeSide(SIDE.HERO, lineup.heroes), ...placeSide(SIDE.ENEMY, lineup.enemies)];
-  for (const unit of units) unitLayer.addChild(unit.view);
+  for (const unit of units) {
+    unitLayer.addChild(unit.view);
+    overlayLayer.addChild(unit.overlay);
+  }
 
   let seconds = 0;
   const tick = (ticker) => {

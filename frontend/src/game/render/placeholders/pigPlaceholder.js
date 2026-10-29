@@ -16,7 +16,10 @@ const LOOKS = {
 const pts = (cx, cy, s, list) => list.flatMap(([x, y]) => [cx + x * s, cy + y * s]);
 
 function drawHelmet(g, cy, r) {
-  g.arc(0, cy, r * 1.06, Math.PI * 1.18, Math.PI * 1.82).closePath();
+  const radius = r * 1.06;
+  const [start, end] = [Math.PI * 1.18, Math.PI * 1.82];
+  // Explicit moveTo: Pixi otherwise starts a path at the previous shape's last point.
+  g.moveTo(Math.cos(start) * radius, cy + Math.sin(start) * radius).arc(0, cy, radius, start, end).closePath();
   g.fill(0x8d949c).stroke({ width: 3, color: 0x3d4248 });
   g.poly(pts(0, cy, r, [[-0.1, -1.02], [0, -1.32], [0.1, -1.02]])).fill(0xb5bcc4).stroke({ width: 2, color: 0x3d4248 });
 }

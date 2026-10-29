@@ -1,4 +1,5 @@
-// One unit on the battlefield: ground shadow, idle-bobbing body and HP bar.
+// One unit on the battlefield: ground shadow and idle-bobbing body in `view`, HP bar in
+// `overlay` (a separate layer above all units, so a nearer unit never hides a bar).
 import { Container, Graphics } from 'pixi.js';
 import { createHpBar } from './hpBar';
 import { createUnitSprite } from './spriteFactory';
@@ -20,9 +21,13 @@ export function createUnitView({ unit, side, x, y, phase }) {
     .fill({ color: 0x000000, alpha: 0.22 });
   const body = new Container();
   body.addChild(sprite.view);
+  view.addChild(shadow, body);
+
+  const overlay = new Container();
+  overlay.position.set(x, y);
   const hpBar = createHpBar({ width: Math.max(MIN_HP_BAR_WIDTH, sprite.width * 0.9), side });
   hpBar.view.y = HP_BAR_GAP;
-  view.addChild(shadow, body, hpBar.view);
+  overlay.addChild(hpBar.view);
 
   // Sine idle: the body rises and stretches slightly while the shadow shrinks.
   function update(seconds) {
@@ -33,5 +38,5 @@ export function createUnitView({ unit, side, x, y, phase }) {
     shadow.scale.set(1 - lift * 0.08);
   }
 
-  return { key: unit.key, view, hpBar, update };
+  return { key: unit.key, view, overlay, hpBar, update };
 }

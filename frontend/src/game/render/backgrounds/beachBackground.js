@@ -6,6 +6,7 @@ import { DESIGN_HEIGHT as H, DESIGN_WIDTH as W } from '../layout';
 
 const HORIZON_Y = 300;
 const SHORE_Y = 432;
+const WET_SAND_HEIGHT = 40; // must reach below the dry sand's top edge (SHORE_Y + 26 at most)
 const BLEED = 40; // drawn past the edges so a camera shake never shows a gap
 const SCENERY_SEED = 1337;
 
@@ -128,7 +129,8 @@ export function createBeachBackground() {
   }
   glints.fill({ color: 0xffffff, alpha: 0.35 });
 
-  const wetSand = new Graphics().rect(-BLEED, SHORE_Y, fullWidth, H - SHORE_Y + BLEED).fill(0xd2ab6c);
+  // Only a strip: the dry sand covers the rest, and overdraw is the main GPU cost here.
+  const wetSand = new Graphics().rect(-BLEED, SHORE_Y, fullWidth, WET_SAND_HEIGHT).fill(0xd2ab6c);
 
   const foam = new Graphics();
   foam.moveTo(-BLEED, SHORE_Y);
