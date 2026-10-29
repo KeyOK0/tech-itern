@@ -288,6 +288,22 @@ npm run lint
 npm run build
 ```
 
+ ## Stan: Faza 2 — silnik walki (czysta logika + testy)
+
+ - `src/game/engine/` — silnik walki bez Pixi i Reacta. API w `battle.js`: `createBattle`, `getLegalActions`, `applyAction`, `runEnemyPhase`. Każde wywołanie zwraca nowy stan i listę zdarzeń (obrażenia, leczenie, statusy, śmierć, fale); stary stan się nie zmienia.
+ - Cała losowość idzie przez seed (mulberry32): ten sam seed i te same akcje dają te same zdarzenia.
+ - Dane: 20 umiejętności bohaterów (3 + 1 ultimate na klasę), umiejętności 5 wrogów, statusy (`statuses.json`), przedmioty jednorazowe (`items.json`), skrypt bossa Chieftain (2 fazy).
+ - Odblokowywanie bohaterów (`unlocks.js`), XP i poziomy (`xp.js`), łupy (`loot.js`), gwiazdki (`rating.js`).
+ - Arena testowa w przeglądarce jeszcze nie korzysta z silnika — to Faza 3.
+
+ ### Testy i symulacja
+
+```
+cd frontend
+npm test            # wszystkie testy, w tym 1000 losowych bitew
+npm run simulate    # tylko symulacja, z podsumowaniem wyników
+```
+
 ---
 
  # Git
