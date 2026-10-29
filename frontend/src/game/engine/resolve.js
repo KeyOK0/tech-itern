@@ -1,7 +1,7 @@
 // Resolves one action (attack / skill / item / defend) on a draft battle state and pushes the
 // events. Mutates the draft it gets; the public API in battle.js clones before calling in.
 // Turn bookkeeping (end of turn, wave and end checks) is done by the caller.
-import { FOCUS, RAGE, SELF_DAMAGE_MIN_HP, TIMING_MULT } from '../../config/balance';
+import { ENEMY_DAMAGE_MULT, FOCUS, RAGE, SELF_DAMAGE_MIN_HP, TIMING_MULT } from '../../config/balance';
 import {
   ACTION,
   DAMAGE_KIND,
@@ -84,6 +84,7 @@ function addStatus(target, effect, actor, events) {
 // Damage part of a physical/magic skill. Returns the opponents that were hit.
 function strikeTargets(draft, actor, skill, targetId, bonusMult, rng, events) {
   const hit = new Map();
+  const sideMult = isHero(actor) ? 1 : ENEMY_DAMAGE_MULT;
   const strike = (target) => {
     const { amount, crit } = computeDamage({
       attacker: actor,
@@ -91,7 +92,7 @@ function strikeTargets(draft, actor, skill, targetId, bonusMult, rng, events) {
       type: skill.type,
       mult: skill.mult,
       rng,
-      bonusMult,
+      bonusMult: bonusMult * sideMult,
       critBonus: skill.critBonus ?? 0,
     });
     inflict(draft, target, amount, { sourceId: actor.id, kind: skill.type, crit }, rng, events);

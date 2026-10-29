@@ -306,6 +306,7 @@ npm run simulate    # tylko symulacja, z podsumowaniem wyników
  ## Stan: Faza 3 — interfejs walki i animacje
 
  - Arena testowa (`/battle/test`) to grywalna bitwa: 3 fale (w ostatniej boss Chieftain), drużyna Red, Chuck, Matilda i Bomb na poziomie 15, mały zestaw przedmiotów.
+ - Świnie zadają 3× obrażenia i mają 1,5× PŻ (`ENEMY_DAMAGE_MULT`, `ENEMY_HP_MULT` w `src/config/balance.js`).
  - HUD: karty bohaterów (PŻ, Skupienie, Furia, statusy), menu akcji (Atak / Umiejętności / Przedmioty / Obrona), celownik nad celami, banery tur, licznik fal i rund, pauza (przycisk albo Esc), szybkość 1x/2x.
  - Pasek wyczucia ataku: kliknij, stuknij albo naciśnij Spację. W menu pauzy można wybrać „Auto” (zawsze „Dobrze”).
  - Animacje zdarzeń z silnika: doskok do celu, błysk trafienia, liczby obrażeń (krytyki większe i żółte), leczenie, ikony statusów nad postaciami, śmierć z deszczem monet, wstrząs ekranu, przerywnik ultimate (zbliżenie i przyciemnienie).

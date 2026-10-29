@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { ENEMY_DAMAGE_MULT } from '../config/balance';
 import { ACTION, BATTLE_PHASE, DAMAGE_KIND, EVENT } from '../config/constants';
+import { getSkill } from '../data';
+import { computeDamage } from '../game/engine/damage';
+import { createRng } from '../game/engine/rng';
 import { applyAction, getLegalActions, getReadyHeroIds, runEnemyPhase } from '../game/engine/battle';
 import { edit, makeBattle, ofType, unitOf } from './helpers';
 
@@ -72,6 +76,22 @@ describe('Focus and Rage', () => {
     expect(next.heroes[0].rage).toBe(0);
     expect(ofType(events, EVENT.DAMAGE)).toHaveLength(2);
     expect(next.enemies.every((enemy) => statusIds(enemy).includes('weak'))).toBe(true);
+  });
+
+  it('enemy hits deal ENEMY_DAMAGE_MULT times the formula damage', () => {
+    const { state: enemyTurn } = applyAction(makeBattle(), defend('h0'));
+    const [grunt, red] = [enemyTurn.enemies[0], enemyTurn.heroes[0]];
+    const expected = computeDamage({
+      attacker: grunt,
+      defender: red,
+      type: 'physical',
+      mult: getSkill('club_smash').mult,
+      rng: createRng(enemyTurn.rng),
+      bonusMult: ENEMY_DAMAGE_MULT,
+    });
+    const hit = ofType(runEnemyPhase(enemyTurn).events, EVENT.DAMAGE)[0];
+    expect(ENEMY_DAMAGE_MULT).toBe(3);
+    expect(hit.amount).toBe(expected.amount);
   });
 
   it('the timing bar scales basic attacks: Great > Good > Miss', () => {
@@ -164,7 +184,8 @@ describe('statuses in battle', () => {
       bleeds.push(...ofType(step.events, EVENT.DAMAGE).filter((e) => e.kind === DAMAGE_KIND.BLEED));
       state = step.state;
     }
-    expect(bleeds.map((e) => e.amount)).toEqual([3, 3, 3]);
+    const tick = Math.round(state.enemies[0].stats.maxHp * 0.05);
+    expect(bleeds.map((e) => e.amount)).toEqual([tick, tick, tick]);
     expect(state.enemies[0].statuses).toEqual([]);
   });
 
@@ -307,7 +328,7 @@ describe('boss script', () => {
 
   it('changes phase at 50% HP and starts the phase 2 rotation', () => {
     const state = bossBattle((draft) => {
-      draft.enemies[0].hp = 211;
+      draft.enemies[0].hp = Math.floor(draft.enemies[0].stats.maxHp / 2) + 1; // just above 50%
     });
     const { state: next, events } = applyAction(state, attack('h0', 'w0e0'));
     expect(ofType(events, EVENT.BOSS_PHASE)).toEqual([{ type: EVENT.BOSS_PHASE, unitId: 'w0e0', phase: 1 }]);

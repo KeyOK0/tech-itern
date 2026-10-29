@@ -1,5 +1,5 @@
 // Battle units built from data, plus side / target queries. Units are plain objects.
-import { CRIT_DEFAULTS, ENEMY_SCALING_PER_STAGE, FOCUS, LEVEL_CAP } from '../../config/balance';
+import { CRIT_DEFAULTS, ENEMY_HP_MULT, ENEMY_SCALING_PER_STAGE, FOCUS, LEVEL_CAP } from '../../config/balance';
 import { SIDE, TARGET } from '../../config/constants';
 import { getEnemy, getHero, getSkill } from '../../data';
 import { BattleError } from './errors';
@@ -19,10 +19,11 @@ export function heroStats(hero, level, bonus = {}) {
   return stats;
 }
 
-// Enemy stats scale with the campaign stage: statMult = 1 + 0.12 * stageIndex.
+// Enemy stats scale with the campaign stage: statMult = 1 + 0.12 * stageIndex. Max HP also
+// gets the global ENEMY_HP_MULT.
 export function enemyStats(enemy, stageIndex) {
   const mult = 1 + ENEMY_SCALING_PER_STAGE * stageIndex;
-  const stats = { maxHp: Math.round(enemy.stats.hp * mult) };
+  const stats = { maxHp: Math.round(enemy.stats.hp * mult * ENEMY_HP_MULT) };
   for (const key of STATS) stats[key] = enemy.stats[key] * mult;
   stats.critChance = enemy.stats.critChance ?? CRIT_DEFAULTS.critChance;
   stats.critMult = enemy.stats.critMult ?? CRIT_DEFAULTS.critMult;

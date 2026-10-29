@@ -109,7 +109,12 @@ Choices made where `PLAN_ABE_CE_.md` was ambiguous or did not match the repo. Ne
 ### Battlefield and sandbox
 
 - Unit rows moved up (feet at 62% and 76% of the height) and the shore with them, so the hero cards never cover a unit.
-- The sandbox is now a 3-wave stage: difficulty `stageIndex` 2, round limit 8. It was tuned with a scripted "sensible player", which wins in about 7 rounds. Stages may set `stageIndex` and an `items` kit (the sandbox has one).
+- The sandbox is now a 3-wave stage at difficulty `stageIndex` 2. It was tuned with a scripted "sensible player": about 7 rounds before the pig buff below, about 10 after it, so the round limit for 3 stars is 11. Stages may set `stageIndex` and an `items` kit (the sandbox has one).
 - `?wave=` is gone (battles always start at wave 1); `?seed=` replays a battle exactly.
 - `lineup.js` is removed: the scene is built straight from the engine's battle state.
 - Audio is still Phase 6.
+
+### Pig buff (owner request)
+
+- All enemies deal 3× damage (+200%) and have 1.5× max HP (+50%). These are two global multipliers in `balance.js` (`ENEMY_DAMAGE_MULT`, `ENEMY_HP_MULT`), applied on top of `enemies.json` and stage scaling. The damage multiplier applies to enemy hits only; enemy heals and bleed ticks are unchanged.
+- Effect on the sandbox (scripted sensible player, 200 seeds): still always winnable, about 10 rounds instead of 7, and a hero is knocked out in about 1 battle in 8.

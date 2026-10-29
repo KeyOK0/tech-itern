@@ -4,7 +4,7 @@
     "zone": "beach",
     "name": "Battle Sandbox",
     "recommendedLevel": 15,
-    "roundLimit": 8,
+    "roundLimit": 11,
     "stageIndex": 2,
     "fixedParty": [
       { "hero": "red", "level": 15 },

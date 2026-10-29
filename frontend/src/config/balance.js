@@ -46,6 +46,11 @@ export const TIMING_MULT = Object.freeze({
 // Enemy stats scale with the 0-based campaign stage index: 1 + 0.12 * stageIndex.
 export const ENEMY_SCALING_PER_STAGE = 0.12;
 
+// Global enemy tuning on top of enemies.json: damage dealt by enemy hits (3 = +200%) and
+// enemy max HP (1.5 = +50%). Enemy heals and bleed are not multiplied.
+export const ENEMY_DAMAGE_MULT = 3;
+export const ENEMY_HP_MULT = 1.5;
+
 // Enemy AI only heals an ally whose HP is below this share of max HP.
 export const AI_HEAL_BELOW = 0.7;
 

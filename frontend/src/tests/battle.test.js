@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ENEMY_HP_MULT } from '../config/balance';
 import { ACTION, BATTLE_OUTCOME, BATTLE_PHASE, EVENT } from '../config/constants';
 import { getStage } from '../data';
 import {
@@ -58,7 +59,7 @@ describe('createBattle', () => {
 
   it('scales enemies by stage index and fills default crit stats', () => {
     const grunt = makeBattle({ stageIndex: 10 }).enemies[0];
-    expect(grunt.stats.maxHp).toBe(132);
+    expect(grunt.stats.maxHp).toBe(Math.round(60 * 2.2 * ENEMY_HP_MULT));
     expect(grunt.stats.atk).toBeCloseTo(22);
     expect(grunt.stats.critChance).toBe(0.08);
     expect(grunt.stats.critMult).toBe(1.5);
