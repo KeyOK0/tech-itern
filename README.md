@@ -58,7 +58,8 @@ tech-itern/
 │   └── ...
 │
 ├── backend/
-│   ├── main.py
+│   ├── app/
+│   │   └── main.py
 │   ├── requirements.txt
 │   └── ...
 │
@@ -187,7 +188,7 @@ pip install -r requirements.txt
  Jeżeli główny plik backendu to:
 
 ```
-backend/main.py
+backend/app/main.py
 ```
 
  i znajduje się w nim:
@@ -201,7 +202,7 @@ app = FastAPI()
  backend można uruchomić:
 
 ```
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
  FastAPI powinno być dostępne pod:
@@ -236,7 +237,7 @@ npm run dev
 ```
 cd tech-itern/backend
 source .venv/bin/activate
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
  Windows:
@@ -244,7 +245,47 @@ uvicorn main:app --reload
 ```
 cd tech-itern/backend
 .venv\Scripts\activate
-uvicorn main:app --reload
+uvicorn app.main:app --reload
+```
+
+---
+
+ # Gra: Angry Birds Epic: Chopped Edition
+
+ Turowa gra RPG w przeglądarce. Plan budowy: `PLAN_ABE_CE_.md`, decyzje projektowe: `docs/DECISIONS.md`, źródła grafiki/dźwięku: `ASSETS.md`.
+
+ ## Stan: Faza 1 — fundament i arena testowa (bez backendu)
+
+ - Scena bitwy w PixiJS v8: plaża (niebo, morze, piasek, palmy), 4 sloty bohaterów po lewej, 4 sloty wrogów po prawej, cienie, animacja „oddychania”, paski HP.
+ - Grafika zastępcza generowana w kodzie (`src/game/render/placeholders/`), podmieniana w jednym miejscu: `src/game/render/spriteFactory.js`.
+ - Obraz 16:9 (1280x720) skalowany do okna z czarnymi pasami (letterbox).
+ - Dane gry w JSON (`src/data/`), sprawdzane przy starcie prostym walidatorem schematu.
+ - Teksty UI przez i18n (`src/i18n/en.js`, `src/i18n/pl.js`), przełącznik języka w menu głównym.
+
+ ### Uruchomienie (PowerShell)
+
+```
+cd frontend
+npm install
+npm run dev
+```
+
+ Arena testowa: http://localhost:5173/battle/test (albo przycisk „Battle sandbox” w menu).
+
+ Parametry podglądu (tylko arena testowa):
+
+```
+/battle/test?party=red,chuck,blues     # do 4 bohaterów: red, chuck, matilda, bomb, blues
+/battle/test?wave=2                    # która fala wrogów
+```
+
+ ### Testy, lint, build
+
+```
+cd frontend
+npm test
+npm run lint
+npm run build
 ```
 
 ---
@@ -739,7 +780,7 @@ npm run dev
 ```
 cd tech-itern/backend
 source .venv/bin/activate
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
  Windows:
@@ -747,7 +788,7 @@ uvicorn main:app --reload
 ```
 cd tech-itern/backend
 .venv\Scripts\activate
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
  ### Adresy
