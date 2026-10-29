@@ -1,0 +1,22 @@
+[
+  {
+    "id": "test",
+    "zone": "beach",
+    "name": "Battle Sandbox",
+    "recommendedLevel": 1,
+    "roundLimit": 10,
+    "fixedParty": [
+      { "hero": "red", "level": 5 },
+      { "hero": "chuck", "level": 5 },
+      { "hero": "matilda", "level": 5 },
+      { "hero": "bomb", "level": 5 }
+    ],
+    "waves": [
+      { "enemies": ["grunt", "slinger", "shaman", "brute"] },
+      { "enemies": ["grunt", "chieftain", "slinger"] }
+    ],
+    "rewards": { "coins": 0, "xp": 0, "firstClearGems": 0 },
+    "bg": "beach_day",
+    "music": "zone1"
+  }
+]
