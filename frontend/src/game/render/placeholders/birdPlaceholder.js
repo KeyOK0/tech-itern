@@ -8,13 +8,36 @@ const OUTLINE = 0x1c1414;
 const BEAK = 0xf4a21d;
 const BEAK_SHADE = 0xd27f14;
 const TAIL = 0x2a1d1d;
+const BLACK_FEATHER = 0x16161c;
+
+// Head feathers as triangles around the top of the head (0, 0), in units of the head radius.
+// Their roots sit below the top, so the body drawn afterwards covers them.
+const TUFTS = {
+  pair: [
+    [[-0.15, 0.1], [-0.35, -0.45], [0.05, 0.05]],
+    [[0, 0.08], [0.05, -0.35], [0.25, 0.1]],
+  ],
+  spray: [
+    [[-0.2, 0.16], [-0.46, -0.34], [-0.04, 0.1]],
+    [[-0.08, 0.14], [-0.02, -0.5], [0.1, 0.12]],
+    [[0.04, 0.16], [0.32, -0.38], [0.2, 0.2]],
+  ],
+};
 
 const LOOKS = {
-  [HERO_CLASS.VANGUARD]: { shape: 'round', body: 0xd6322a, belly: 0xf2dcc2, size: 1, tuft: true },
-  [HERO_CLASS.ARCANIST]: { shape: 'triangle', body: 0xf5c623, belly: 0xfbecc0, size: 1 },
-  [HERO_CLASS.MENDER]: { shape: 'egg', body: 0xf3f0e6, belly: 0xf6d3db, size: 1.05 },
+  [HERO_CLASS.VANGUARD]: {
+    shape: 'round', body: 0xd6322a, belly: 0xf2dcc2, size: 1, tuft: { style: 'pair', color: 0xd6322a },
+  },
+  [HERO_CLASS.ARCANIST]: {
+    shape: 'triangle', body: 0xf5c623, belly: 0xfbecc0, size: 1, tuft: { style: 'spray', color: BLACK_FEATHER },
+  },
+  [HERO_CLASS.MENDER]: {
+    shape: 'egg', body: 0xf3f0e6, belly: 0xf6d3db, size: 1.05, tuft: { style: 'spray', color: BLACK_FEATHER },
+  },
   [HERO_CLASS.DEMOLISHER]: { shape: 'round', body: 0x2b2c35, belly: 0x55566a, size: 1.18, fuse: true },
-  [HERO_CLASS.SKIRMISHER]: { shape: 'trio', body: 0x45a1df, belly: 0xd7edfb, size: 0.55 },
+  [HERO_CLASS.SKIRMISHER]: {
+    shape: 'trio', body: 0x45a1df, belly: 0xd7edfb, size: 0.55, tuft: { style: 'spray', color: BLACK_FEATHER },
+  },
 };
 
 // Offsets a list of [x, y] pairs given in units of `s` around (cx, cy).
@@ -25,9 +48,12 @@ function drawTail(g, cx, cy, r) {
   g.poly(pts(cx, cy, r, [[-0.85, 0], [-1.4, -0.05], [-1.3, 0.12], [-0.85, 0.2]])).fill(TAIL);
 }
 
-function drawTuft(g, cx, cy, r, color) {
-  g.poly(pts(cx, cy, r, [[-0.15, -0.9], [-0.35, -1.45], [0.05, -0.95]])).fill(color).stroke({ width: 2, color: OUTLINE });
-  g.poly(pts(cx, cy, r, [[0, -0.92], [0.05, -1.35], [0.25, -0.9]])).fill(color).stroke({ width: 2, color: OUTLINE });
+// (x, topY) is the top of the head; s is the head radius.
+function drawTuft(g, x, topY, s, tuft) {
+  if (!tuft) return;
+  for (const feather of TUFTS[tuft.style]) {
+    g.poly(pts(x, topY, s, feather)).fill(tuft.color).stroke({ width: 2, color: OUTLINE });
+  }
 }
 
 function drawFuse(g, cx, cy, r) {
@@ -51,7 +77,7 @@ function drawFace(g, cx, cy, s) {
 
 function drawRoundBird(g, cx, cy, r, look) {
   drawTail(g, cx, cy, r);
-  if (look.tuft) drawTuft(g, cx, cy, r, look.body);
+  drawTuft(g, cx, cy - r, r, look.tuft);
   if (look.fuse) drawFuse(g, cx, cy, r);
   g.circle(cx, cy, r).fill(look.body).stroke({ width: 3, color: OUTLINE });
   g.ellipse(cx - r * 0.05, cy + r * 0.45, r * 0.62, r * 0.42).fill(look.belly);
@@ -62,6 +88,8 @@ function drawTriangleBird(g, r, look) {
   const radius = r * 1.5;
   const cy = -radius / 2; // centroid of a triangle whose base sits on the ground
   drawTail(g, 0, cy + r * 0.2, r * 0.9);
+  // The rounded apex is narrow, so the crest is rooted a little lower than the tip.
+  drawTuft(g, 0, cy - radius + r * 0.42, r * 0.85, look.tuft);
   g.roundPoly(0, cy, radius, 3, r * 0.28).fill(look.body).stroke({ width: 3, color: OUTLINE });
   g.ellipse(0, cy + r * 0.45, r * 0.55, r * 0.26).fill(look.belly);
   drawFace(g, 0, cy - r * 0.05, r * 0.85);
@@ -70,6 +98,7 @@ function drawTriangleBird(g, r, look) {
 function drawEggBird(g, r, look) {
   const cy = -r * 1.12;
   drawTail(g, 0, cy + r * 0.2, r);
+  drawTuft(g, 0, cy - r * 1.12, r * 0.9, look.tuft);
   g.ellipse(0, cy, r * 0.92, r * 1.12).fill(look.body).stroke({ width: 3, color: OUTLINE });
   g.ellipse(-r * 0.05, cy + r * 0.55, r * 0.58, r * 0.45).fill(look.belly);
   drawFace(g, 0, cy - r * 0.05, r * 0.95);
