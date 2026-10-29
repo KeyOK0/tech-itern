@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ENEMY_TIER, HERO_CLASS, SANDBOX_STAGE_ID, UNLOCK_TYPE } from '../config/constants';
-import { ENEMIES, getStage, HEROES, STAGES } from '../data';
+import { ENEMIES, getSkill, getStage, HEROES, STAGES, STATUSES } from '../data';
 import { assertCollection, validate } from '../data/schema';
 import { buildLineup } from '../game/lineup';
 
@@ -21,6 +21,29 @@ describe('game data', () => {
 
   it('has the sandbox stage', () => {
     expect(STAGES.map((stage) => stage.id)).toContain(SANDBOX_STAGE_ID);
+  });
+
+  it('gives every hero 3 skills + 1 Rage ultimate, unlocking at levels 1 / 5 / 10 / 15', () => {
+    const heroSkills = HEROES.flatMap((hero) => hero.skills);
+    expect(new Set(heroSkills).size).toBe(20);
+    for (const hero of HEROES) {
+      const skills = hero.skills.map(getSkill);
+      expect(skills.map((skill) => skill.unlockLevel)).toEqual([1, 5, 10, 15]);
+      expect(skills.map((skill) => Boolean(skill.isUltimate))).toEqual([false, false, false, true]);
+      expect(skills.filter((skill) => !skill.isUltimate).every((skill) => skill.focusCost >= 1 && skill.focusCost <= 3)).toBe(true);
+    }
+  });
+
+  it('defines every status from the plan', () => {
+    const ids = STATUSES.map((status) => status.id);
+    for (const id of ['stun', 'bleed', 'shield', 'taunt', 'buffAtk', 'buffDef', 'weak']) expect(ids).toContain(id);
+  });
+
+  it('gives the boss a two-phase script', () => {
+    const boss = ENEMIES.find((enemy) => enemy.tier === ENEMY_TIER.BOSS);
+    expect(boss.ai).toBe('bossScript');
+    expect(boss.script.phases).toHaveLength(2);
+    expect(boss.script.phases[1].atHpPct).toBe(0.5);
   });
 });
 
