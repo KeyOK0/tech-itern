@@ -24,7 +24,7 @@ export default function FpsMeter() {
   }, []);
 
   return (
-    <span className="rounded-md bg-black/50 px-2 py-1 font-mono text-[10px] text-lime-300">
+    <span className="rounded-[0.4em] bg-black/50 px-[0.5em] py-[0.15em] font-mono text-[0.7em] text-lime-300">
       {t('battle.fps', { fps: fps ?? '--' })}
     </span>
   );

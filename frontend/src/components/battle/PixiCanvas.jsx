@@ -79,7 +79,7 @@ export default function PixiCanvas({ createScene, children }) {
 
   return (
     <div ref={viewportRef} className="flex h-full w-full items-center justify-center overflow-hidden bg-black">
-      <div ref={frameRef} className="relative overflow-hidden">
+      <div ref={frameRef} className="@container relative overflow-hidden">
         <div ref={hostRef} className="absolute inset-0" />
         {status.state === 'ready' && children}
         {status.state !== 'ready' && (

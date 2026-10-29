@@ -59,3 +59,12 @@ export const ZONE_STAGE_COUNT = Object.freeze({
   jungle: 10,
   ruins: 10,
 });
+
+// Attack timing bar: the cursor sweeps across in SWEEP_MS. Zones are widths centred on the bar
+// (share of its length). No tap after MAX_SWEEPS sweeps counts as a miss.
+export const TIMING_BAR = Object.freeze({
+  SWEEP_MS: 900,
+  GREAT_ZONE: 0.14,
+  GOOD_ZONE: 0.5,
+  MAX_SWEEPS: 4,
+});

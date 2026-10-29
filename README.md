@@ -272,11 +272,11 @@ npm run dev
 
  Arena testowa: http://localhost:5173/battle/test (albo przycisk „Battle sandbox” w menu).
 
- Parametry podglądu (tylko arena testowa):
+ Parametry (tylko arena testowa):
 
 ```
 /battle/test?party=red,chuck,blues     # do 4 bohaterów: red, chuck, matilda, bomb, blues
-/battle/test?wave=2                    # która fala wrogów
+/battle/test?seed=123                  # ta sama bitwa przy każdym uruchomieniu
 ```
 
  ### Testy, lint, build
@@ -294,7 +294,6 @@ npm run build
  - Cała losowość idzie przez seed (mulberry32): ten sam seed i te same akcje dają te same zdarzenia.
  - Dane: 20 umiejętności bohaterów (3 + 1 ultimate na klasę), umiejętności 5 wrogów, statusy (`statuses.json`), przedmioty jednorazowe (`items.json`), skrypt bossa Chieftain (2 fazy).
  - Odblokowywanie bohaterów (`unlocks.js`), XP i poziomy (`xp.js`), łupy (`loot.js`), gwiazdki (`rating.js`).
- - Arena testowa w przeglądarce jeszcze nie korzysta z silnika — to Faza 3.
 
  ### Testy i symulacja
 
@@ -303,6 +302,22 @@ cd frontend
 npm test            # wszystkie testy, w tym 1000 losowych bitew
 npm run simulate    # tylko symulacja, z podsumowaniem wyników
 ```
+
+ ## Stan: Faza 3 — interfejs walki i animacje
+
+ - Arena testowa (`/battle/test`) to grywalna bitwa: 3 fale (w ostatniej boss Chieftain), drużyna Red, Chuck, Matilda i Bomb na poziomie 15, mały zestaw przedmiotów.
+ - HUD: karty bohaterów (PŻ, Skupienie, Furia, statusy), menu akcji (Atak / Umiejętności / Przedmioty / Obrona), celownik nad celami, banery tur, licznik fal i rund, pauza (przycisk albo Esc), szybkość 1x/2x.
+ - Pasek wyczucia ataku: kliknij, stuknij albo naciśnij Spację. W menu pauzy można wybrać „Auto” (zawsze „Dobrze”).
+ - Animacje zdarzeń z silnika: doskok do celu, błysk trafienia, liczby obrażeń (krytyki większe i żółte), leczenie, ikony statusów nad postaciami, śmierć z deszczem monet, wstrząs ekranu, przerywnik ultimate (zbliżenie i przyciemnienie).
+ - Ekran zwycięstwa (gwiazdki, PD, monety, łupy) i porażki, przycisk „Zagraj ponownie”.
+ - To, co widać na ekranie, po każdym kroku jest synchronizowane ze stanem silnika (test sprawdza to na 300 losowych bitwach).
+
+ ### Jak zagrać
+
+ 1. `npm run dev`, potem http://localhost:5173/battle/test
+ 2. Bohater z żółtą obwódką czeka na rozkaz. Wybierz akcję, potem cel (żółty pierścień).
+ 3. Przy ataku zatrzymaj wskaźnik na zielonym polu.
+ 4. Inny bohater: kliknij jego kartę na dole.
 
 ---
 

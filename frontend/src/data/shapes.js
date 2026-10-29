@@ -63,7 +63,9 @@ export const STAGE = {
   name: 'string',
   recommendedLevel: 'number',
   roundLimit: 'number',
+  'stageIndex?': 'number',
   'fixedParty?': { arrayOf: { shape: { hero: 'string', level: 'number' } } },
+  'items?': 'object', // consumables handed out for this stage (sandbox, tutorials)
   waves: { arrayOf: { shape: { enemies: { arrayOf: 'string' } } } },
   rewards: 'object',
   bg: 'string',

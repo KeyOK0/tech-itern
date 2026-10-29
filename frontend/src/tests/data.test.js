@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ENEMY_TIER, HERO_CLASS, SANDBOX_STAGE_ID, UNLOCK_TYPE } from '../config/constants';
 import { ENEMIES, getSkill, getStage, HEROES, STAGES, STATUSES } from '../data';
 import { assertCollection, validate } from '../data/schema';
-import { buildLineup } from '../game/lineup';
+import { parseSeed, resolveParty } from '../game/sandbox';
 
 describe('game data', () => {
   it('ships five heroes, one per class', () => {
@@ -68,31 +68,31 @@ describe('schema checker', () => {
   });
 });
 
-describe('buildLineup', () => {
+describe('sandbox helpers', () => {
   const sandbox = getStage(SANDBOX_STAGE_ID);
 
-  it('uses the stage fixed party and the first wave by default', () => {
-    const lineup = buildLineup(sandbox);
-    expect(lineup.heroes.map((hero) => hero.key)).toEqual(sandbox.fixedParty.map(({ hero }) => `hero:${hero}`));
-    expect(lineup.enemies).toHaveLength(sandbox.waves[0].enemies.length);
-    expect(lineup.waveIndex).toBe(0);
-    expect(lineup.waveCount).toBe(sandbox.waves.length);
+  it('is a 3-wave stage with a full party', () => {
+    expect(sandbox.waves).toHaveLength(3);
+    expect(sandbox.fixedParty).toHaveLength(4);
   });
 
-  it('maps heroes to their class and enemies to their tier', () => {
-    const lineup = buildLineup(sandbox, { partyIds: ['blues'], waveIndex: 1 });
-    expect(lineup.heroes).toEqual([{ key: 'hero:blues', sprite: 'hero_blues', variant: HERO_CLASS.SKIRMISHER }]);
-    expect(lineup.enemies.map((enemy) => enemy.variant)).toContain(ENEMY_TIER.BOSS);
+  it('uses the fixed party when ?party= is missing or useless', () => {
+    expect(resolveParty(sandbox, null)).toEqual(sandbox.fixedParty);
+    expect(resolveParty(sandbox, 'nobody,,')).toEqual(sandbox.fixedParty);
   });
 
-  it('drops unknown and duplicate heroes and caps the party at four', () => {
-    const lineup = buildLineup(sandbox, { partyIds: ['red', 'nobody', 'red', 'chuck', 'matilda', 'bomb', 'blues'] });
-    expect(lineup.heroes.map((hero) => hero.key)).toEqual(['hero:red', 'hero:chuck', 'hero:matilda', 'hero:bomb']);
+  it('drops unknown and duplicate heroes, caps the party at four and keeps levels', () => {
+    const party = resolveParty(sandbox, 'blues, red,nobody,red,chuck,matilda,bomb');
+    expect(party.map((member) => member.hero)).toEqual(['blues', 'red', 'chuck', 'matilda']);
+    expect(party.every((member) => member.level === sandbox.fixedParty[0].level)).toBe(true);
   });
 
-  it('clamps the wave index', () => {
-    expect(buildLineup(sandbox, { waveIndex: 99 }).waveIndex).toBe(sandbox.waves.length - 1);
-    expect(buildLineup(sandbox, { waveIndex: -3 }).waveIndex).toBe(0);
-    expect(buildLineup(sandbox, { waveIndex: Number.NaN }).waveIndex).toBe(0);
+  it('accepts only whole, non-negative seeds', () => {
+    expect(parseSeed('42')).toBe(42);
+    expect(parseSeed(null)).toBe(null);
+    expect(parseSeed('')).toBe(null);
+    expect(parseSeed('-1')).toBe(null);
+    expect(parseSeed('1.5')).toBe(null);
+    expect(parseSeed('abc')).toBe(null);
   });
 });

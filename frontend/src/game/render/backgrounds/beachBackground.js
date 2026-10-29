@@ -5,7 +5,7 @@ import { createRng } from '../../engine/rng';
 import { DESIGN_HEIGHT as H, DESIGN_WIDTH as W } from '../layout';
 
 const HORIZON_Y = 300;
-const SHORE_Y = 432;
+const SHORE_Y = 405;
 const WET_SAND_HEIGHT = 40; // must reach below the dry sand's top edge (SHORE_Y + 26 at most)
 const BLEED = 40; // drawn past the edges so a camera shake never shows a gap
 const SCENERY_SEED = 1337;

@@ -2,6 +2,7 @@
 // Feet sit at (0, 0); birds face right, toward the enemies.
 import { Graphics } from 'pixi.js';
 import { HERO_CLASS } from '../../../config/constants';
+import { HERO_COLOR } from '../palette';
 
 const BASE_RADIUS = 38;
 const OUTLINE = 0x1c1414;
@@ -26,17 +27,17 @@ const TUFTS = {
 
 const LOOKS = {
   [HERO_CLASS.VANGUARD]: {
-    shape: 'round', body: 0xd6322a, belly: 0xf2dcc2, size: 1, tuft: { style: 'pair', color: 0xd6322a },
+    shape: 'round', body: HERO_COLOR[HERO_CLASS.VANGUARD], belly: 0xf2dcc2, size: 1, tuft: { style: 'pair', color: HERO_COLOR[HERO_CLASS.VANGUARD] },
   },
   [HERO_CLASS.ARCANIST]: {
-    shape: 'triangle', body: 0xf5c623, belly: 0xfbecc0, size: 1, tuft: { style: 'spray', color: BLACK_FEATHER },
+    shape: 'triangle', body: HERO_COLOR[HERO_CLASS.ARCANIST], belly: 0xfbecc0, size: 1, tuft: { style: 'spray', color: BLACK_FEATHER },
   },
   [HERO_CLASS.MENDER]: {
-    shape: 'egg', body: 0xf3f0e6, belly: 0xf6d3db, size: 1.05, tuft: { style: 'spray', color: BLACK_FEATHER },
+    shape: 'egg', body: HERO_COLOR[HERO_CLASS.MENDER], belly: 0xf6d3db, size: 1.05, tuft: { style: 'spray', color: BLACK_FEATHER },
   },
-  [HERO_CLASS.DEMOLISHER]: { shape: 'round', body: 0x2b2c35, belly: 0x55566a, size: 1.18, fuse: true },
+  [HERO_CLASS.DEMOLISHER]: { shape: 'round', body: HERO_COLOR[HERO_CLASS.DEMOLISHER], belly: 0x55566a, size: 1.18, fuse: true },
   [HERO_CLASS.SKIRMISHER]: {
-    shape: 'trio', body: 0x45a1df, belly: 0xd7edfb, size: 0.55, tuft: { style: 'spray', color: BLACK_FEATHER },
+    shape: 'trio', body: HERO_COLOR[HERO_CLASS.SKIRMISHER], belly: 0xd7edfb, size: 0.55, tuft: { style: 'spray', color: BLACK_FEATHER },
   },
 };
 

@@ -159,3 +159,26 @@ export const battlePath = (stageId) => `/battle/${stageId}`;
 export const STORAGE_KEYS = Object.freeze({
   SETTINGS: 'abece.settings',
 });
+
+// Battle screen input modes.
+export const UI_MODE = Object.freeze({
+  LOADING: 'loading',
+  BUSY: 'busy', // banners and event playback: no input
+  COMMAND: 'command', // choosing an action for the selected hero
+  TARGET: 'target', // choosing a target for the pending action
+  TIMING: 'timing', // attack timing bar
+  OVER: 'over', // results
+});
+
+export const ACTION_MENU = Object.freeze({
+  MAIN: 'main',
+  SKILLS: 'skills',
+  ITEMS: 'items',
+});
+
+export const TIMING_MODE = Object.freeze({
+  MANUAL: 'manual',
+  AUTO: 'auto',
+});
+
+export const BATTLE_SPEEDS = Object.freeze([1, 2]);

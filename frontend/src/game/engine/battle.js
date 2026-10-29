@@ -71,19 +71,20 @@ export function createBattle(config, seed) {
   return state;
 }
 
-// A battle for a stage from stages.json. `party` defaults to the stage's fixedParty.
-export function createStageBattle(stageId, seed, { party, stageIndex = 0, items } = {}) {
+// A battle for a stage from stages.json. `party` defaults to the stage's fixedParty and `items`
+// to the stage's own kit; enemy scaling uses the stage's `stageIndex` when it has one.
+export function createStageBattle(stageId, seed, { party, stageIndex, items } = {}) {
   const stage = getStage(stageId);
   if (!stage) throw new BattleError(`Unknown stage "${stageId}"`);
   return createBattle(
     {
       stageId,
-      stageIndex,
+      stageIndex: stageIndex ?? stage.stageIndex ?? 0,
       roundLimit: stage.roundLimit,
       waves: stage.waves,
       rewards: stage.rewards,
       party: party ?? stage.fixedParty ?? [],
-      items,
+      items: items ?? stage.items,
     },
     seed,
   );

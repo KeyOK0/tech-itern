@@ -82,3 +82,34 @@ Choices made where `PLAN_ABE_CE_.md` was ambiguous or did not match the repo. Ne
 - `BattleError` messages are developer-facing English. The UI only sends legal actions, so players never see them.
 - The 1000-battle simulation runs as a vitest file (`npm run simulate`). The engine uses Vite-style imports (JSON, no file extensions) that plain Node cannot load. The simulation also checks that no engine call changes its input state.
 - Stats for heroes other than Red, all enemy stats and all skill numbers are a first pass, to be tuned with the simulation and play-testing.
+
+## Phase 3
+
+### How a battle runs on screen
+
+- `game/battleController.js` (plain JS, no React or Pixi) drives the flow: player input → engine → event playback → next turn, including turn banners and the results. UI state lives in `store/useBattleUiStore.js`; the HUD only reads it and calls the controller.
+- No desync: while events play, the HUD view advances one event at a time (`game/battleView.js`). After every engine step the view is rebuilt from the engine state and the Pixi scene snaps to it. A mismatch is logged as an error, and `battleView.test.js` replays 300 random battles to check the events always reproduce the state.
+- After every action, the first hero who can still act is selected automatically. Any ready hero can be picked from the cards instead.
+- Single-target actions ask for a target. Skills that hit all, self or random targets fire right away.
+- Results are an overlay on the battle screen. The plan's `/results` route is not needed yet; Phase 4 can add it if the map flow wants one.
+
+### Input and HUD
+
+- Targets are React buttons placed over units as percentages of the 16:9 frame, not Pixi hit areas, so mouse, touch and keyboard focus all work the same way. The button stays still and only its ring pulses (a moving hit area is harder to tap).
+- The HUD's root font size is set in container units (`cqw`) and everything inside uses `em`, so the whole HUD scales with the battle frame.
+- Timing bar zones are in `balance.js` (Great 14%, Good 50% of the bar, 900 ms per sweep); no tap within 4 sweeps counts as Miss. "Auto" (pause menu, saved in settings) always gives Good. Battle speed does not speed up the bar.
+- Data names are translated in `i18n/names.js` (a Polish table by id). The JSON keeps the English names.
+
+### Animation
+
+- All animation timing goes through gsap, one tween group per scene, so everything is killed on unmount. Pause stops gsap's global timeline and the Pixi ticker. The 1x/2x toggle sets gsap's global time scale.
+- Downed heroes stay on the field (tilted, faded) so Revive Feather has something to aim at. Dead enemies fade out with a coin burst.
+- Floating numbers and particles use `Math.random` for small offsets. That is cosmetic and never touches battle state.
+
+### Battlefield and sandbox
+
+- Unit rows moved up (feet at 62% and 76% of the height) and the shore with them, so the hero cards never cover a unit.
+- The sandbox is now a 3-wave stage: difficulty `stageIndex` 2, round limit 8. It was tuned with a scripted "sensible player", which wins in about 7 rounds. Stages may set `stageIndex` and an `items` kit (the sandbox has one).
+- `?wave=` is gone (battles always start at wave 1); `?seed=` replays a battle exactly.
+- `lineup.js` is removed: the scene is built straight from the engine's battle state.
+- Audio is still Phase 6.
